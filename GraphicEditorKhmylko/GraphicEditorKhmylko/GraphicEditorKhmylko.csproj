@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\baseClasses\baseShape.cs" />
+    <Compile Include="classes\figure\BrokenLine.cs" />
+    <Compile Include="classes\figure\EllipsShape.cs" />
     <Compile Include="classes\figure\LineShape.cs" />
+    <Compile Include="classes\figure\Polygon.cs" />
     <Compile Include="classes\figure\RectangleShape.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

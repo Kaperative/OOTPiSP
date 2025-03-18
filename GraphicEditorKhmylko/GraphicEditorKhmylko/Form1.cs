@@ -18,15 +18,18 @@ namespace GraphicEditorKhmylko
         private List<baseShape> shapes; 
         private Point tempStartPoint;
         private Point tempEndPoint;
+        Color FillColor = Color.FromArgb(255, 255, 255, 255);
+        
         private bool isDrawing;
         private string selectedShape;
         private Pen tempPen;
+        private List<Point> curentPoints_BrokenLine = new List<Point> { };
         public Form1()
         {
             InitializeComponent();
             shapes = new List<baseShape> { };
             tempPen = new Pen(Color.Black, 2);
-
+            FillColor= Color.FromArgb(255, 255, 255, 255);
 
             LineToolStripMenuItem.Image = Properties.Resources.Line;
             rectangleToolStripMenuItem.Image = Properties.Resources.Rectangle;
@@ -36,9 +39,6 @@ namespace GraphicEditorKhmylko
 
             contextMenuStripBaseFigure.ImageScalingSize = new Size(32, 32);
             ShapeButton.ContextMenuStrip = contextMenuStripBaseFigure;
-
-
-
 
             ShapeButton.Image = Properties.Resources.Line;
             ShapeButton.MouseDown += new MouseEventHandler(ShapeButton_MouseDown);
@@ -80,6 +80,27 @@ namespace GraphicEditorKhmylko
             if (isDrawing)
             {
                 baseShape temporaryShape = null;
+                bool isRotateX = false;
+                bool isRotateY = false;
+                if ((selectedShape == "Rectangle") || (selectedShape == "Ellips"))
+                {
+                    if (tempStartPoint.X > tempEndPoint.X)
+                    {
+                        int tempP = tempStartPoint.X;
+                        tempStartPoint.X = tempEndPoint.X;
+                        tempEndPoint.X = tempP;
+                        isRotateX = true;
+                    }
+                    if (tempStartPoint.Y > tempEndPoint.Y)
+                    {
+                        int tempP = tempStartPoint.Y;
+                        tempStartPoint.Y = tempEndPoint.Y;
+                        tempEndPoint.Y = tempP;
+                        isRotateY = true;
+                    }
+
+
+                }
 
                 if (selectedShape == "Line")
                 {
@@ -87,12 +108,39 @@ namespace GraphicEditorKhmylko
                 }
                 else if (selectedShape == "Rectangle")
                 {
-                    temporaryShape = new RectangleShape(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width);
+                    temporaryShape = new RectangleShape(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width,FillColor);
+                }
+                else if (selectedShape == "Ellips")
+                {
+                    temporaryShape = new EllipsShape(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width, FillColor);
+                }
+                else if (selectedShape == "Polygon")
+                {
+                    temporaryShape = new Polygon(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width, FillColor,5);
+                }
+                else if (selectedShape == "BrokenLine")
+                {
+                    temporaryShape = new BrokenLine (curentPoints_BrokenLine, tempPen.Color, tempPen.Width);
                 }
 
                 if (temporaryShape != null)
                 {
                     temporaryShape.Draw(e.Graphics);
+                }
+
+                if (isRotateX)
+                {
+                    int tempP = tempStartPoint.X;
+                    tempStartPoint.X = tempEndPoint.X;
+                    tempEndPoint.X = tempP;
+                    isRotateX = false;
+                }
+                if (isRotateY)
+                {
+                    int tempP = tempStartPoint.Y;
+                    tempStartPoint.Y = tempEndPoint.Y;
+                    tempEndPoint.Y = tempP;
+                    isRotateY = false;
                 }
             }
         }
@@ -108,19 +156,49 @@ namespace GraphicEditorKhmylko
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isDrawing)
+            if (isDrawing && selectedShape != "BrokenLine")
             {
                 tempEndPoint = e.Location;
                 pictureBox1.Invalidate();
             }
+           
+
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
+            if (selectedShape == "BrokenLine")
+            {
+                if (e.Button == MouseButtons.Left)
+                { curentPoints_BrokenLine.Add(e.Location); }
+                pictureBox1.Invalidate();
+            }
+
             if (e.Button == MouseButtons.Left && isDrawing && !string.IsNullOrEmpty(selectedShape))
             {
+         
                 tempEndPoint = e.Location;
                 baseShape newShape = null;
+
+                if ((selectedShape == "Rectangle") || (selectedShape == "Ellips"))
+                {
+                    if (tempStartPoint.X > tempEndPoint.X)
+                    {
+                        int tempP = tempStartPoint.X;
+                        tempStartPoint.X = tempEndPoint.X;
+                        tempEndPoint.X = tempP;
+                        
+                    }
+                    if (tempStartPoint.Y > tempEndPoint.Y)
+                    {
+                        int tempP = tempStartPoint.Y;
+                        tempStartPoint.Y = tempEndPoint.Y;
+                        tempEndPoint.Y = tempP;
+                       
+                    }
+
+
+                }
 
                 if (selectedShape == "Line")
                 {
@@ -128,7 +206,20 @@ namespace GraphicEditorKhmylko
                 }
                 else if (selectedShape == "Rectangle")
                 {
-                    newShape = new RectangleShape(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width);
+                    newShape = new RectangleShape(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width, FillColor);
+                }
+                else if (selectedShape == "Ellips")
+                {
+                    newShape = new EllipsShape(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width, FillColor);
+                }
+                else if (selectedShape == "Polygon")
+                {
+                    newShape = new Polygon(tempStartPoint, tempEndPoint, tempPen.Color, tempPen.Width, FillColor, 5);
+                }
+                else if (selectedShape == "BrokenLine")
+                {
+                    newShape = new BrokenLine(curentPoints_BrokenLine, tempPen.Color, tempPen.Width);
+                   
                 }
 
                 if (newShape != null)
@@ -136,12 +227,12 @@ namespace GraphicEditorKhmylko
                     shapes.Add(newShape);
                 }
 
+                
                 isDrawing = false;
                 pictureBox1.Invalidate();
             }
         }
 
-        // LINE
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
            
@@ -149,25 +240,19 @@ namespace GraphicEditorKhmylko
             selectedShape = "Line";
         }
 
-        // RECTANGLE
         private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectedShape = "Rectangle";
         }
-
-        //POLYGON
         private void PolygonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectedShape = "Polygon";
         }
-
-        //ELLIPS
         private void EllipsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectedShape = "Ellips";
         }
 
-        //BROKEN LINE
         private void BrokenLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectedShape = "BrokenLine";
