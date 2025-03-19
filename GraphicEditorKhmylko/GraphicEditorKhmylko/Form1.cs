@@ -19,11 +19,12 @@ namespace GraphicEditorKhmylko
         private Point tempStartPoint;
         private Point tempEndPoint;
         Color FillColor = Color.FromArgb(255, 255, 255, 255);
-        
         private bool isDrawing;
         private string selectedShape;
         private Pen tempPen;
         private List<Point> curentPoints_BrokenLine = new List<Point> { };
+
+
         public Form1()
         {
             InitializeComponent();

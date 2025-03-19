@@ -10,7 +10,7 @@ namespace GraphicEditorKhmylko.classes.figure
     internal class BrokenLine: baseShape
     {
 
-        List<Point> points;
+        protected List<Point> points;
  
 
         public BrokenLine(List<Point> ps, Color colorL, float widthL) : base(colorL, widthL)
