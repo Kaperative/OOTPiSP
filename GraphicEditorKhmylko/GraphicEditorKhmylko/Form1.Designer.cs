@@ -46,10 +46,16 @@
             this.BrokenLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorDialogPen = new System.Windows.Forms.ColorDialog();
             this.ColorButton = new System.Windows.Forms.Button();
+            this.buttonFillColor = new System.Windows.Forms.Button();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.addPlugin = new System.Windows.Forms.Button();
+            this.buttonUNDO = new System.Windows.Forms.Button();
+            this.buttonREDO = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.menuStripUP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStripBaseFigure.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -175,12 +181,64 @@
             // 
             // ColorButton
             // 
+            this.ColorButton.BackColor = System.Drawing.Color.Black;
             this.ColorButton.Location = new System.Drawing.Point(129, 32);
             this.ColorButton.Name = "ColorButton";
             this.ColorButton.Size = new System.Drawing.Size(43, 38);
             this.ColorButton.TabIndex = 3;
-            this.ColorButton.UseVisualStyleBackColor = true;
+            this.ColorButton.UseVisualStyleBackColor = false;
             this.ColorButton.Click += new System.EventHandler(this.ColorButton_Click);
+            // 
+            // buttonFillColor
+            // 
+            this.buttonFillColor.BackColor = System.Drawing.Color.White;
+            this.buttonFillColor.Location = new System.Drawing.Point(191, 32);
+            this.buttonFillColor.Name = "buttonFillColor";
+            this.buttonFillColor.Size = new System.Drawing.Size(43, 38);
+            this.buttonFillColor.TabIndex = 4;
+            this.buttonFillColor.UseVisualStyleBackColor = false;
+            this.buttonFillColor.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(244, 32);
+            this.trackBar1.Maximum = 25;
+            this.trackBar1.Minimum = 1;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(243, 56);
+            this.trackBar1.TabIndex = 6;
+            this.trackBar1.Value = 1;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // addPlugin
+            // 
+            this.addPlugin.Location = new System.Drawing.Point(823, 32);
+            this.addPlugin.Name = "addPlugin";
+            this.addPlugin.Size = new System.Drawing.Size(136, 38);
+            this.addPlugin.TabIndex = 7;
+            this.addPlugin.Text = "add plugin";
+            this.addPlugin.UseVisualStyleBackColor = true;
+            this.addPlugin.Click += new System.EventHandler(this.addPlugin_Click);
+            // 
+            // buttonUNDO
+            // 
+            this.buttonUNDO.Location = new System.Drawing.Point(607, 31);
+            this.buttonUNDO.Name = "buttonUNDO";
+            this.buttonUNDO.Size = new System.Drawing.Size(75, 39);
+            this.buttonUNDO.TabIndex = 8;
+            this.buttonUNDO.Text = "CTRL+Z";
+            this.buttonUNDO.UseVisualStyleBackColor = true;
+            this.buttonUNDO.Click += new System.EventHandler(this.buttonUNDO_Click);
+            // 
+            // buttonREDO
+            // 
+            this.buttonREDO.Location = new System.Drawing.Point(688, 32);
+            this.buttonREDO.Name = "buttonREDO";
+            this.buttonREDO.Size = new System.Drawing.Size(75, 39);
+            this.buttonREDO.TabIndex = 9;
+            this.buttonREDO.Text = "CTRL+Y";
+            this.buttonREDO.UseVisualStyleBackColor = true;
+            this.buttonREDO.Click += new System.EventHandler(this.buttonREDO_Click);
             // 
             // Form1
             // 
@@ -188,10 +246,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(971, 549);
+            this.Controls.Add(this.buttonREDO);
+            this.Controls.Add(this.buttonUNDO);
+            this.Controls.Add(this.addPlugin);
+            this.Controls.Add(this.buttonFillColor);
             this.Controls.Add(this.ColorButton);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStripUP);
+            this.Controls.Add(this.trackBar1);
             this.MainMenuStrip = this.menuStripUP;
             this.Name = "Form1";
             this.Text = "Paint";
@@ -201,6 +264,7 @@
             this.menuStripUP.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.contextMenuStripBaseFigure.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,6 +289,11 @@
         private System.Windows.Forms.Button ShapeButton;
         private System.Windows.Forms.ColorDialog colorDialogPen;
         private System.Windows.Forms.Button ColorButton;
+        private System.Windows.Forms.Button buttonFillColor;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Button addPlugin;
+        private System.Windows.Forms.Button buttonUNDO;
+        private System.Windows.Forms.Button buttonREDO;
     }
 }
 
