@@ -183,14 +183,11 @@ namespace GraphicEditorKhmylko
                 settingShape.Width,
                 settingShape.FillColor
             );
+            Tag = key;
+            Image tempImage = (System.Drawing.Image)Properties.Resources.Undefine;
 
-            var menuItem = new ToolStripMenuItem(key)
-            {
-                Tag = key,
-                Image = (System.Drawing.Image)Properties.Resources.Undefine
-            };
-            menuItem.Click += ShapeMenuItem_Click;
-            contextMenuStripBaseFigure.Items.Add(menuItem);
+            AddShape(key, key, tempImage, shapeFactory[key]);
+
         }
 
 
