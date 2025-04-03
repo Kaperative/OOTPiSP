@@ -1,4 +1,6 @@
-﻿namespace GraphicEditorKhmylko
+﻿using System.Windows.Forms;
+
+namespace GraphicEditorKhmylko
 {
     partial class Form1
     {
@@ -39,11 +41,6 @@
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.contextMenuStripBaseFigure = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.LineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rectangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.PolygonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.EllipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BrokenLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorDialogPen = new System.Windows.Forms.ColorDialog();
             this.ColorButton = new System.Windows.Forms.Button();
             this.buttonFillColor = new System.Windows.Forms.Button();
@@ -51,10 +48,11 @@
             this.addPlugin = new System.Windows.Forms.Button();
             this.buttonUNDO = new System.Windows.Forms.Button();
             this.buttonREDO = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.menuStripUP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.contextMenuStripBaseFigure.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,7 +81,7 @@
             this.menuStripUP_FILE});
             this.menuStripUP.Location = new System.Drawing.Point(0, 0);
             this.menuStripUP.Name = "menuStripUP";
-            this.menuStripUP.Size = new System.Drawing.Size(971, 28);
+            this.menuStripUP.Size = new System.Drawing.Size(1074, 28);
             this.menuStripUP.TabIndex = 1;
             this.menuStripUP.Text = "menuStrip1";
             // 
@@ -135,49 +133,8 @@
             // contextMenuStripBaseFigure
             // 
             this.contextMenuStripBaseFigure.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStripBaseFigure.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.LineToolStripMenuItem,
-            this.rectangleToolStripMenuItem,
-            this.PolygonToolStripMenuItem,
-            this.EllipsToolStripMenuItem,
-            this.BrokenLineToolStripMenuItem});
             this.contextMenuStripBaseFigure.Name = "contextMenuStripBaseFigure";
-            this.contextMenuStripBaseFigure.Size = new System.Drawing.Size(156, 124);
-            // 
-            // LineToolStripMenuItem
-            // 
-            this.LineToolStripMenuItem.Name = "LineToolStripMenuItem";
-            this.LineToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
-            this.LineToolStripMenuItem.Text = "Line";
-            this.LineToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // rectangleToolStripMenuItem
-            // 
-            this.rectangleToolStripMenuItem.Name = "rectangleToolStripMenuItem";
-            this.rectangleToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
-            this.rectangleToolStripMenuItem.Text = "Rectangle";
-            this.rectangleToolStripMenuItem.Click += new System.EventHandler(this.rectangleToolStripMenuItem_Click);
-            // 
-            // PolygonToolStripMenuItem
-            // 
-            this.PolygonToolStripMenuItem.Name = "PolygonToolStripMenuItem";
-            this.PolygonToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
-            this.PolygonToolStripMenuItem.Text = "Polygon";
-            this.PolygonToolStripMenuItem.Click += new System.EventHandler(this.PolygonToolStripMenuItem_Click);
-            // 
-            // EllipsToolStripMenuItem
-            // 
-            this.EllipsToolStripMenuItem.Name = "EllipsToolStripMenuItem";
-            this.EllipsToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
-            this.EllipsToolStripMenuItem.Text = "Ellips";
-            this.EllipsToolStripMenuItem.Click += new System.EventHandler(this.EllipsToolStripMenuItem_Click);
-            // 
-            // BrokenLineToolStripMenuItem
-            // 
-            this.BrokenLineToolStripMenuItem.Name = "BrokenLineToolStripMenuItem";
-            this.BrokenLineToolStripMenuItem.Size = new System.Drawing.Size(155, 24);
-            this.BrokenLineToolStripMenuItem.Text = "Broken Line";
-            this.BrokenLineToolStripMenuItem.Click += new System.EventHandler(this.BrokenLineToolStripMenuItem_Click);
+            this.contextMenuStripBaseFigure.Size = new System.Drawing.Size(61, 4);
             // 
             // ColorButton
             // 
@@ -240,12 +197,34 @@
             this.buttonREDO.UseVisualStyleBackColor = true;
             this.buttonREDO.Click += new System.EventHandler(this.buttonREDO_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(981, 71);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(81, 49);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Save";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(981, 135);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(81, 49);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "load";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.ClientSize = new System.Drawing.Size(971, 549);
+            this.ClientSize = new System.Drawing.Size(1074, 555);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonREDO);
             this.Controls.Add(this.buttonUNDO);
             this.Controls.Add(this.addPlugin);
@@ -263,10 +242,14 @@
             this.menuStripUP.ResumeLayout(false);
             this.menuStripUP.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.contextMenuStripBaseFigure.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+            ShapeButton.MouseDown += new MouseEventHandler(ShapeButton_MouseDown);
+            pictureBox1.Paint += new PaintEventHandler(pictureBox1_Paint);
+            pictureBox1.MouseDown += new MouseEventHandler(pictureBox1_MouseDown);
+            pictureBox1.MouseMove += new MouseEventHandler(pictureBox1_MouseMove);
+            pictureBox1.MouseUp += new MouseEventHandler(pictureBox1_MouseUp);
 
         }
 
@@ -281,11 +264,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripBaseFigure;
-        private System.Windows.Forms.ToolStripMenuItem LineToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rectangleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem PolygonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem EllipsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem BrokenLineToolStripMenuItem;
         private System.Windows.Forms.Button ShapeButton;
         private System.Windows.Forms.ColorDialog colorDialogPen;
         private System.Windows.Forms.Button ColorButton;
@@ -294,6 +272,8 @@
         private System.Windows.Forms.Button addPlugin;
         private System.Windows.Forms.Button buttonUNDO;
         private System.Windows.Forms.Button buttonREDO;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

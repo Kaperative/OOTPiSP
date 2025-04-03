@@ -1,6 +1,9 @@
 ﻿using GraphicEditorKhmylko.classes.baseClasses;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace GraphicEditorKhmylko.classes.lists
 {
@@ -51,5 +54,7 @@ namespace GraphicEditorKhmylko.classes.lists
         {
             redo.Clear();
         }
+
+      
     }
 }

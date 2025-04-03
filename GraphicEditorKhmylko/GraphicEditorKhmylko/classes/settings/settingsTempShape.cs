@@ -23,8 +23,6 @@ namespace GraphicEditorKhmylko.classes.settings
         public bool isRotateY { get; set; } = false;
 
 
-        public ShapeType SelectedShape { get; set; } = ShapeType.Line;
-
 
         public void AdjustCoordinates()
         {
