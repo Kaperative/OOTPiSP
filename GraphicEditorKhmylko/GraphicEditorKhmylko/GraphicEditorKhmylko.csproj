@@ -60,16 +60,16 @@
     <Compile Include="classes\serialization\Deserilization.cs" />
     <Compile Include="classes\serialization\Serialization.cs" />
     <Compile Include="classes\settings\settingsTempShape.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Paint.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Paint.Designer.cs">
+      <DependentUpon>Paint.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Paint.resx">
+      <DependentUpon>Paint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -99,19 +99,19 @@
     <Folder Include="classes\plugin\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\ShapeICO\Ellips.png" />
+    <None Include="Resources\ico\ShapeICO\Ellips.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\ShapeICO\Polygon.png" />
+    <None Include="Resources\ico\ShapeICO\Polygon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\ShapeICO\Rectangle.png" />
+    <None Include="Resources\ico\ShapeICO\Rectangle.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\ShapeICO\Line.png" />
+    <None Include="Resources\ico\ShapeICO\Line.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\ShapeICO\BrokenLine.png" />
+    <None Include="Resources\ico\ShapeICO\BrokenLine.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Undefine.bmp" />

@@ -8,23 +8,31 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
+
 using System.Linq;
+
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace GraphicEditorKhmylko
 {
-    public partial class Form1 : Form
+    public partial class Paint : Form
     {
         private List<baseShape> shapes;
         private settingsTempShape settingShape = new settingsTempShape();
         private UndoRedoShapes undoRedoShapes = new UndoRedoShapes();
+
         private List<string> shapeKeys = new List<string>();
+
+
+
+        private List<Point> currentBrokenLinePoints = new List<Point> { };
+
         private Dictionary<string, Func<baseShape>> shapeFactory = new Dictionary<string, Func<baseShape>>();
         private string selectedShapeKey;
 
-        public Form1()
+        public Paint()
         {
             InitializeComponent();
             InitializeDefaultShapes();
@@ -36,8 +44,10 @@ namespace GraphicEditorKhmylko
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadPlugins();
+         
+
             settingShape.CountOfAngle = 5;
+
             ColorButton.BackColor = Color.Black;
         }
 
@@ -61,7 +71,10 @@ namespace GraphicEditorKhmylko
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+
             shapes = undoRedoShapes.shapes;
+
+
             foreach (var shape in shapes)
             {
                 shape.Draw(e.Graphics);
@@ -70,9 +83,11 @@ namespace GraphicEditorKhmylko
             if (settingShape.isDrawing && selectedShapeKey != null)
             {
                 baseShape temporaryShape = null;
+
                 settingShape.currentBrokenLinePoints.Add(settingShape.endPosition);
                 temporaryShape = shapeFactory[selectedShapeKey]();
                 settingShape.currentBrokenLinePoints.Remove(settingShape.endPosition);
+
                 if (temporaryShape != null)
                 {
                     temporaryShape.Draw(e.Graphics);
@@ -86,7 +101,9 @@ namespace GraphicEditorKhmylko
         {
             if (e.Button == MouseButtons.Left)
             {
+
                 settingShape.startPosition = e.Location;
+
                 settingShape.isDrawing = true;
             }
 
@@ -94,7 +111,9 @@ namespace GraphicEditorKhmylko
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
+
             if (settingShape.isDrawing)
+
             {
                 settingShape.endPosition = e.Location;
                 pictureBox1.Invalidate();
@@ -105,56 +124,81 @@ namespace GraphicEditorKhmylko
         {
             if (e.Button == MouseButtons.Left && settingShape.isDrawing)
             {
-               
-                    settingShape.currentBrokenLinePoints.Add(e.Location);
-                    settingShape.endPosition = e.Location;
+
+                settingShape.currentBrokenLinePoints.Add(e.Location);
+                settingShape.endPosition = e.Location;
+                try
+                {
                     baseShape temporaryShape = shapeFactory[selectedShapeKey]();
+
+
                     if (temporaryShape != null)
                     {
                         undoRedoShapes.AddShape(temporaryShape);
                     }
                     settingShape.isDrawing = false;
                     pictureBox1.Invalidate();
-                
+                }
+           
+
+                     catch
+                {
+                }
             }
         }
+
 
 
         private void ShapeMenuItem_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem menuItem && menuItem.Tag is string key)
             {
+
                 settingShape.currentBrokenLinePoints.Clear();
+
                 selectedShapeKey = key;
                 ShapeButton.Image = menuItem.Image;
             }
         }
-        private void LoadPlugins()
+
+private void LoadPlugins()
         {
-            string pluginsPath = @"C:\Users\user\Desktop\4 сем\OOP\OOTPiSP\GraphicEditorKhmylko\GraphicEditorKhmylko\Plugins";
-
-            if (!Directory.Exists(pluginsPath))
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                Directory.CreateDirectory(pluginsPath);
-            }
+                openFileDialog.Filter = "DLL файлы (*.dll)|*.dll";
+                openFileDialog.Title = "Выберите плагин";
 
-            foreach (string dll in Directory.GetFiles(pluginsPath, "*.dll"))
-            {
-                try
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    Assembly assembly = Assembly.LoadFrom(dll);
+                    string dllPath = openFileDialog.FileName;
 
-                    foreach (Type type in assembly.GetTypes())
+                    try
                     {
-                        if (type.IsSubclassOf(typeof(baseShape)) && !type.IsAbstract)
+                        Assembly assembly = Assembly.LoadFrom(dllPath);
+
+                        int found = 0;
+                        foreach (Type type in assembly.GetTypes())
                         {
-                            AddPlugin(type);
+                            if (type.IsSubclassOf(typeof(baseShape)) && !type.IsAbstract)
+                            {
+                                AddPlugin(type);
+                                found++;
+                            }
+                        }
+
+                        if (found == 0)
+                        {
+                            MessageBox.Show("В выбранном файле не найдено подходящих плагинов.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Загружено плагинов: {found}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Ошибка загрузки плагина {dll}: {ex.Message}");
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка загрузки плагина:\n{ex}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -165,6 +209,7 @@ namespace GraphicEditorKhmylko
         {
             string key = shapeType.Name;
 
+
             if (shapeKeys.Contains(key))
                 return;
 
@@ -174,7 +219,7 @@ namespace GraphicEditorKhmylko
             {
                 try
                 {
-                    // Пытаемся создать с стандартными параметрами
+
                     return (baseShape)Activator.CreateInstance(
                         shapeType,
                         settingShape.startPosition,
@@ -186,12 +231,11 @@ namespace GraphicEditorKhmylko
                 }
                 catch
                 {
-                    // Если не получилось, пробуем конструктор по умолчанию
+           
                     try
                     {
                         var shape = (baseShape)Activator.CreateInstance(shapeType);
 
-                        // Устанавливаем свойства вручную
                         shape.GetType().GetProperty("StartX")?.SetValue(shape, settingShape.startPosition.X);
                         shape.GetType().GetProperty("StartY")?.SetValue(shape, settingShape.startPosition.Y);
                         shape.GetType().GetProperty("EndX")?.SetValue(shape, settingShape.endPosition.X);
@@ -217,6 +261,27 @@ namespace GraphicEditorKhmylko
             };
 
             AddShape(key, key, Properties.Resources.Undefine, shapeFactory[key]);
+
+            if (!shapeKeys.Contains(key))
+                shapeKeys.Add(key);
+
+            shapeFactory[key] = () => (baseShape)Activator.CreateInstance(
+                shapeType,
+                settingShape.startPosition,
+                settingShape.endPosition,
+                settingShape.StrokeColor,
+                settingShape.Width,
+                settingShape.FillColor
+            );
+
+            var menuItem = new ToolStripMenuItem(key)
+            {
+                Tag = key,
+                Image = (System.Drawing.Image)Properties.Resources.Undefine
+            };
+            menuItem.Click += ShapeMenuItem_Click;
+            contextMenuStripBaseFigure.Items.Add(menuItem);
+
         }
 
 
@@ -231,35 +296,45 @@ namespace GraphicEditorKhmylko
                 key: "Line",
                 name: "Line",
                 icon: Properties.Resources.Line,
+
                 factory: () => new LineShape(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width)
+
             );
 
             AddShape(
                 key: "Rectangle",
                 name: "Rectangle",
                 icon: Properties.Resources.Rectangle,
+
                 factory: () => new RectangleShape(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor)
+
             );
 
             AddShape(
                 key: "Ellips",
                 name: "Ellips",
                 icon: Properties.Resources.Ellips,
+
                 factory: () => new EllipsShape(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor)
+
             );
 
             AddShape(
                 key: "Polygon",
                 name: "Polygon",
                 icon: Properties.Resources.Polygon,
+
                 factory: () => new Polygon(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor, settingShape.CountOfAngle)
+
             );
 
             AddShape(
                 key: "BrokenLine",
                 name: "BrokenLine",
                 icon: Properties.Resources.BrokenLine,
+
                 factory: () => new BrokenLine(settingShape.currentBrokenLinePoints, settingShape.StrokeColor, settingShape.Width)
+
             );
         }
 
@@ -315,6 +390,7 @@ namespace GraphicEditorKhmylko
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
@@ -335,10 +411,12 @@ namespace GraphicEditorKhmylko
                 }
             
             }
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+
             using (var openFileDialog = new OpenFileDialog
             {
                 Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
@@ -389,6 +467,7 @@ namespace GraphicEditorKhmylko
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             settingShape.CountOfAngle = trackBar2.Value;
+
         }
     }
 }

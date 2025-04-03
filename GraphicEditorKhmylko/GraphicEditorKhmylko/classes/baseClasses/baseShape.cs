@@ -7,21 +7,19 @@ namespace GraphicEditorKhmylko
 {
     public abstract class baseShape
 {
-        [JsonProperty("StrokeColor")]
-        public Color StrokeColor { get; set; }
 
-        [JsonProperty("Width")]
+        public Color ColorLine { get; set; }
         public float WidthLine { get; set; }
 
-        [JsonIgnore]
+
         public Pen pen;
 
         public baseShape(Color colorL, float widthL)
         {
 
-            StrokeColor = colorL;
+            ColorLine = colorL;
             WidthLine = widthL;
-            pen = new Pen(StrokeColor, WidthLine);
+            pen = new Pen(ColorLine, WidthLine);
         }
 
         public abstract void Draw(Graphics graphics);
