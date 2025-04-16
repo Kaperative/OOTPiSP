@@ -20,7 +20,7 @@ namespace GraphicEditorKhmylko
         private UndoRedoShapes undoRedoShapes = new UndoRedoShapes();
 
         private List<string> shapeKeys = new List<string>(); // check consist of
-
+        private int CountOfAngle = 5;
         private List<Point> currentBrokenLinePoints = new List<Point> { };
         private Dictionary<string, Func<baseShape>> shapeFactory = new Dictionary<string, Func<baseShape>>();
         private string selectedShapeKey;
@@ -40,6 +40,7 @@ namespace GraphicEditorKhmylko
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadPlugins();
+            CountOfAngle = 5;
             ColorButton.BackColor = Color.Black;
         }
 
@@ -72,20 +73,23 @@ namespace GraphicEditorKhmylko
             if (settingShape.isDrawing && selectedShapeKey != null)
             {
                 baseShape temporaryShape = null;
+                currentBrokenLinePoints.Add(settingShape.endPosition);
                 temporaryShape = shapeFactory[selectedShapeKey]();
-
+                currentBrokenLinePoints.Remove(settingShape.endPosition);
                 if (temporaryShape != null)
                 {
                     temporaryShape.Draw(e.Graphics);
                 }
             }
+
+           
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                settingShape.tempStartPoint = e.Location;
+                settingShape.startPosition = e.Location;
                 settingShape.isDrawing = true;
             }
 
@@ -93,40 +97,36 @@ namespace GraphicEditorKhmylko
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (settingShape.isDrawing && selectedShapeKey != "BrokenLine")
+            if (settingShape.isDrawing)
             {
-                settingShape.tempEndPoint = e.Location;
+                settingShape.endPosition = e.Location;
                 pictureBox1.Invalidate();
             }
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-
-            if (selectedShapeKey == "BrokenLine")
+            if (e.Button == MouseButtons.Left && settingShape.isDrawing)
             {
-                if (e.Button == MouseButtons.Left)
-                { currentBrokenLinePoints.Add(e.Location); }
-
-                pictureBox1.Invalidate();
-            }
-
-            if (e.Button == MouseButtons.Left && settingShape.isDrawing && selectedShapeKey != null)
-            {
-
-                settingShape.tempEndPoint = e.Location;
-                baseShape temporaryShape = null;
-                temporaryShape = shapeFactory[selectedShapeKey]();
-
-                if (temporaryShape != null)
+                if (selectedShapeKey == "BrokenLine")
                 {
-                    undoRedoShapes.AddShape(temporaryShape);
+                    currentBrokenLinePoints.Add(e.Location);
+                    pictureBox1.Invalidate();
                 }
-                settingShape.isDrawing = false;
-                pictureBox1.Invalidate();
+                else
+                {
+
+                    settingShape.endPosition = e.Location;
+                    baseShape temporaryShape = shapeFactory[selectedShapeKey]();
+                    if (temporaryShape != null)
+                    {
+                        undoRedoShapes.AddShape(temporaryShape);
+                    }
+                    settingShape.isDrawing = false;
+                    pictureBox1.Invalidate();
+                }
             }
         }
-
 
 
         private void ShapeMenuItem_Click(object sender, EventArgs e)
@@ -177,8 +177,8 @@ namespace GraphicEditorKhmylko
 
             shapeFactory[key] = () => (baseShape)Activator.CreateInstance(
                 shapeType,
-                settingShape.tempStartPoint,
-                settingShape.tempEndPoint,
+                settingShape.startPosition,
+                settingShape.endPosition,
                 settingShape.StrokeColor,
                 settingShape.Width,
                 settingShape.FillColor
@@ -202,28 +202,28 @@ namespace GraphicEditorKhmylko
                 key: "Line",
                 name: "Line",
                 icon: Properties.Resources.Line,
-                factory: () => new LineShape(settingShape.tempStartPoint, settingShape.tempEndPoint, settingShape.StrokeColor, settingShape.Width)
+                factory: () => new LineShape(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width)
             );
 
             AddShape(
                 key: "Rectangle",
                 name: "Rectangle",
                 icon: Properties.Resources.Rectangle,
-                factory: () => new RectangleShape(settingShape.tempStartPoint, settingShape.tempEndPoint, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor)
+                factory: () => new RectangleShape(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor)
             );
 
             AddShape(
                 key: "Ellips",
                 name: "Ellips",
                 icon: Properties.Resources.Ellips,
-                factory: () => new EllipsShape(settingShape.tempStartPoint, settingShape.tempEndPoint, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor)
+                factory: () => new EllipsShape(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor)
             );
 
             AddShape(
                 key: "Polygon",
                 name: "Polygon",
                 icon: Properties.Resources.Polygon,
-                factory: () => new Polygon(settingShape.tempStartPoint, settingShape.tempEndPoint, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor, 5)
+                factory: () => new Polygon(settingShape.startPosition, settingShape.endPosition, settingShape.StrokeColor, settingShape.Width, settingShape.FillColor, CountOfAngle)
             );
 
             AddShape(
@@ -292,6 +292,25 @@ namespace GraphicEditorKhmylko
         private void button2_Click(object sender, EventArgs e)
         {
            // undoRedoShapes.LoadShapes();
+        }
+
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            if (selectedShapeKey == "BrokenLine" && currentBrokenLinePoints.Count >= 2)
+            {
+                var brokenLine = new BrokenLine(new List<Point>(currentBrokenLinePoints),
+                                              settingShape.StrokeColor,
+                                              settingShape.Width);
+                undoRedoShapes.AddShape(brokenLine);
+                currentBrokenLinePoints.Clear();
+                settingShape.isDrawing = false;
+                pictureBox1.Invalidate();
+            }
+        }
+
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            CountOfAngle = trackBar2.Value;
         }
     }
 }

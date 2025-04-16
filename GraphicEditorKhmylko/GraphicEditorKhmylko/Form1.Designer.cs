@@ -50,10 +50,12 @@ namespace GraphicEditorKhmylko
             this.buttonREDO = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.panel1.SuspendLayout();
             this.menuStripUP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -72,6 +74,7 @@ namespace GraphicEditorKhmylko
             this.ShapeButton.Size = new System.Drawing.Size(50, 45);
             this.ShapeButton.TabIndex = 0;
             this.ShapeButton.UseVisualStyleBackColor = true;
+            this.ShapeButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ShapeButton_MouseDown);
             // 
             // menuStripUP
             // 
@@ -129,6 +132,11 @@ namespace GraphicEditorKhmylko
             this.pictureBox1.Size = new System.Drawing.Size(892, 467);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.pictureBox1.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
             // contextMenuStripBaseFigure
             // 
@@ -217,6 +225,17 @@ namespace GraphicEditorKhmylko
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // trackBar2
+            // 
+            this.trackBar2.Location = new System.Drawing.Point(0, 32);
+            this.trackBar2.Maximum = 25;
+            this.trackBar2.Minimum = 5;
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(120, 56);
+            this.trackBar2.TabIndex = 12;
+            this.trackBar2.Value = 5;
+            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -234,6 +253,7 @@ namespace GraphicEditorKhmylko
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStripUP);
             this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.trackBar2);
             this.MainMenuStrip = this.menuStripUP;
             this.Name = "Form1";
             this.Text = "Paint";
@@ -243,13 +263,9 @@ namespace GraphicEditorKhmylko
             this.menuStripUP.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            ShapeButton.MouseDown += new MouseEventHandler(ShapeButton_MouseDown);
-            pictureBox1.Paint += new PaintEventHandler(pictureBox1_Paint);
-            pictureBox1.MouseDown += new MouseEventHandler(pictureBox1_MouseDown);
-            pictureBox1.MouseMove += new MouseEventHandler(pictureBox1_MouseMove);
-            pictureBox1.MouseUp += new MouseEventHandler(pictureBox1_MouseUp);
 
         }
 
@@ -274,6 +290,7 @@ namespace GraphicEditorKhmylko
         private System.Windows.Forms.Button buttonREDO;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private TrackBar trackBar2;
     }
 }
 

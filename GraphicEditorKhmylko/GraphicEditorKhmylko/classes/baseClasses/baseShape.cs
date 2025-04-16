@@ -19,5 +19,7 @@ namespace GraphicEditorKhmylko
         }
 
         public abstract void Draw(Graphics graphics);
+
+
 }
 }
