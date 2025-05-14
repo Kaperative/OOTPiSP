@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,22 +10,45 @@ namespace GraphicEditorKhmylko.classes.figure
 {
     internal class EllipsShape: baseShape
     {
-        protected Point startPosition { set; get; }
-        protected Point endPosition { set; get; }
+        [JsonProperty("Type")]
+        public string Type { get; set; } = "Polygon";
 
-        protected Color ColorFill { get; set; }
+        [JsonProperty("StartX")]
+        public int StartX { get; set; }
+
+        [JsonProperty("StartY")]
+        public int StartY { get; set; }
+
+        [JsonProperty("EndX")]
+        public int EndX { get; set; }
+
+        [JsonProperty("EndY")]
+        public int EndY { get; set; }
+
+        [JsonProperty("FillColor")]
+        public Color FillColor { get; set; }
+
+        [JsonIgnore]
+        public Point startPosition => new Point(StartX, StartY);
+
+        [JsonIgnore]
+        public Point endPosition => new Point(EndX, EndY);
+    
 
         public EllipsShape(Point start, Point end, Color colorL, float widthL, Color colorF) : base(colorL, widthL)
         {
-            this.startPosition = start;
-            this.endPosition = end;
-            this.ColorFill = colorF;
+
+            StartX = start.X;
+            StartY = start.Y;
+            EndX = end.X;
+            EndY = end.Y;
+            FillColor = colorF;
         }
 
         public override void Draw(Graphics graphics)
         {
             AdjustCoordinates();
-            Brush brush = (ColorFill != Color.FromArgb(255, 255, 255, 255)) ? new SolidBrush(ColorFill) : null;
+            Brush brush = (FillColor != Color.FromArgb(255, 255, 255, 255)) ? new SolidBrush(FillColor) : null;
             Rectangle rect = new Rectangle(startPosition.X, startPosition.Y, Math.Abs(endPosition.X-startPosition.X), Math.Abs(endPosition.Y - startPosition.Y));
             if (brush != null)
             {
@@ -38,15 +62,43 @@ namespace GraphicEditorKhmylko.classes.figure
             if (startPosition.X > endPosition.X)
             {
                 int temp = startPosition.X;
-                startPosition = new Point(endPosition.X, startPosition.Y);
-                endPosition = new Point(temp, endPosition.Y);
+
+                StartX= endPosition.X;
+                StartY= startPosition.Y;
+
+
+             //   startPosition = new Point(endPosition.X, startPosition.Y);
+
+                EndX = temp;
+                EndY= endPosition.Y;
+               // endPosition = new Point(temp, endPosition.Y);
             }
             if (startPosition.Y > endPosition.Y)
             {
                 int temp = startPosition.Y;
-                startPosition = new Point(startPosition.X, endPosition.Y);
-                endPosition = new Point(endPosition.X, temp);
+              //  startPosition = new Point(startPosition.X, endPosition.Y);
+                StartX = startPosition.X;
+                StartY = endPosition.Y;
+             //   endPosition = new Point(endPosition.X, temp);
+                EndX = endPosition.X;
+                EndY = temp;
             }
         }
+
+    //    public override Dictionary<string, object> GetShapeData()
+    //    {
+    //        return new Dictionary<string, object>
+    //{
+    //    { "Type", "Ellips" },
+    //    { "StartX", startPosition.X },
+    //    { "StartY", startPosition.Y },
+    //    { "EndX", endPosition.X },
+    //    { "EndY", endPosition.Y },
+    //    { "StrokeColor", ColorLine.ToArgb() },
+    //    { "FillColor", ColorFill.ToArgb() },
+    //    { "Width", WidthLine }
+    //};
+
+    //    }
     }
 }

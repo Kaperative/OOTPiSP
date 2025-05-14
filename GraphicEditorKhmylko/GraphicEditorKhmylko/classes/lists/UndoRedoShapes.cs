@@ -1,23 +1,14 @@
 ﻿using GraphicEditorKhmylko.classes.baseClasses;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Windows.Forms;
-using System.Xml.Serialization;
 
 namespace GraphicEditorKhmylko.classes.lists
 {
     internal class UndoRedoShapes : baseUndoRedo
     {
 
-        private List<baseShape> shapes = new List<baseShape>();
+        public List<baseShape> shapes { get; set; } = new List<baseShape>();
         private List<baseShape> redo = new List<baseShape>();
 
-        public List<baseShape> Shapes
-        {
-            get { return new List<baseShape>(shapes); }
-            set {}
-        }
 
         public  bool CanUndo { get { return shapes.Count > 0; } }
         public  bool CanRedo { get { return redo.Count > 0; } }
@@ -29,13 +20,11 @@ namespace GraphicEditorKhmylko.classes.lists
             shapes.Add(shape);
         }
 
-
         public void Clear()
         {
             redo= shapes;
             shapes.Clear();  
         }
-
 
         public override void Undo()
         {
@@ -53,8 +42,6 @@ namespace GraphicEditorKhmylko.classes.lists
         public  void ClearHistory()
         {
             redo.Clear();
-        }
-
-      
+        } 
     }
 }

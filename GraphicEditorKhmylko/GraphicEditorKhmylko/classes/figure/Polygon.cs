@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,31 +10,58 @@ namespace GraphicEditorKhmylko.classes.figure
 {
     internal class Polygon : baseShape
     {
-        protected int nLines;
-        protected Point startPosition { set; get; }
-        protected Point endPosition { set; get; }
-        protected Color ColorFill { get; set; }
+        [JsonProperty("Type")]
+        public string Type { get; set; } = "Polygon";
+
+        [JsonProperty("Nlines")]
+        public int Nlines { get; set; }
+
+        [JsonProperty("StartX")]
+        public int StartX { get; set; }
+
+        [JsonProperty("StartY")]
+        public int StartY { get; set; }
+
+        [JsonProperty("EndX")]
+        public int EndX { get; set; }
+
+        [JsonProperty("EndY")]
+        public int EndY { get; set; }
+
+
+        [JsonProperty("FillColor")]
+        public Color FillColor { get; set; }
+
+        [JsonIgnore]
+        public Point startPosition => new Point(StartX, StartY);
+
+        [JsonIgnore]
+        public Point endPosition => new Point(EndX, EndY);
+
+    
 
         public Polygon(Point start, Point end, Color colorL, float widthL, Color colorF, int nLines) : base(colorL, widthL)
         {
-            this.startPosition = start;
-            this.endPosition = end;
-            this.ColorFill = colorF;
-            this.nLines = nLines;
+            StartX = start.X;
+            StartY = start.Y;
+            EndX = end.X;
+            EndY = end.Y;
+            FillColor = colorF;
+            Nlines = nLines;
         }
 
         public override void Draw(Graphics graphics)
         {
            
-            double degH = 2 * Math.PI / nLines;
-            PointF[] points = new PointF[nLines];
+            double degH = 2 * Math.PI / Nlines;
+            PointF[] points = new PointF[Nlines];
 
             float a = Math.Abs(startPosition.X - endPosition.X) / 2;
             float b = Math.Abs(startPosition.Y - endPosition.Y) / 2;
             float centerX = (startPosition.X + endPosition.X) / 2; 
             float centerY = (startPosition.Y + endPosition.Y) / 2;
 
-            for (int i = 0; i < nLines; i++)
+            for (int i = 0; i < Nlines; i++)
             {
                 double angle = i * degH;
                 float tempX = centerX + a * (float)Math.Cos(angle);
@@ -41,11 +69,28 @@ namespace GraphicEditorKhmylko.classes.figure
 
                 points[i] = new PointF(tempX, tempY);
             }
-            using (Brush brush = new SolidBrush(ColorFill))
+            using (Brush brush = new SolidBrush(FillColor))
             {
                 graphics.FillPolygon(brush, points);
             }
             graphics.DrawPolygon(pen, points);
         }
+
+    //    public override Dictionary<string, object> GetShapeData()
+    //    {
+    //        return new Dictionary<string, object>
+    //{
+    //    { "Type", "Polygon" },
+    //    { "StartX", startPosition.X },
+    //    { "StartY", startPosition.Y },
+    //    { "EndX", endPosition.X },
+    //    { "EndY", endPosition.Y },
+    //    { "StrokeColor", ColorLine.ToArgb() },
+    //    { "FillColor", ColorFill.ToArgb() },
+    //    {"Nlines" , nLines},
+    //    { "Width", WidthLine }
+    //};
+        
+  //      }
     }
 }

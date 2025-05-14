@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -6,34 +7,45 @@ namespace GraphicEditorKhmylko.classes.figure
 {
     public class BrokenLine : baseShape
     {
-        private List<Point> _points;
+        [JsonProperty("Type")]
+        public string Type { get; set; } = "BrokenLine";
+
+        [JsonProperty("Points")]
+        public List<Point> Points { get; set; }
 
         public BrokenLine(List<Point> points, Color color, float width)
             : base(color, width)
         {
-            _points = new List<Point>(points);
+            Points = new List<Point>(points);
         }
 
         public override void Draw(Graphics graphics)
         {
-            if (_points.Count < 2) return; 
+            if (Points.Count < 2) return;
 
-            pen.Color = ColorLine;
+            pen.Color = StrokeColor;
             pen.Width = WidthLine;
-            graphics.DrawLines(pen, _points.ToArray());
+            graphics.DrawLines(pen, Points.ToArray());
         }
         public void AddPoint(Point newPoint)
         {
-            _points.Add(newPoint);
+            Points.Add(newPoint);
         }
 
         public void ClearPoints()
         {
-            _points.Clear();
+            Points.Clear();
         }
 
-        public int PointsCount => _points.Count;
-        public Point FirstPoint => _points.Count > 0 ? _points[0] : Point.Empty;
-        public Point LastPoint => _points.Count > 0 ? _points[_points.Count - 1] : Point.Empty;
+    //    public override Dictionary<string, object> GetShapeData()
+    //    {
+    //        return new Dictionary<string, object>
+    //{
+    //    { "Type", "BrokenLine" },
+    //    { "Points", _points },
+    //    { "StrokeColor", ColorLine.ToArgb() },
+    //    { "Width", WidthLine }
+    //};
+    //    }
     }
 }
