@@ -160,27 +160,63 @@ namespace GraphicEditorKhmylko
         }
 
 
+
         private void AddPlugin(Type shapeType)
         {
             string key = shapeType.Name;
 
-            if (!shapeKeys.Contains(key))
-                shapeKeys.Add(key);
-            else
+            if (shapeKeys.Contains(key))
                 return;
 
-                shapeFactory[key] = () => (baseShape)Activator.CreateInstance(
-                    shapeType,
-                    settingShape.startPosition,
-                    settingShape.endPosition,
-                    settingShape.StrokeColor,
-                    settingShape.Width,
-                    settingShape.FillColor
-                );
-            Tag = key;
-            Image tempImage = Properties.Resources.Undefine;
-            AddShape(key, key, tempImage, shapeFactory[key]);
+            shapeKeys.Add(key);
 
+            shapeFactory[key] = () =>
+            {
+                try
+                {
+                    // Пытаемся создать с стандартными параметрами
+                    return (baseShape)Activator.CreateInstance(
+                        shapeType,
+                        settingShape.startPosition,
+                        settingShape.endPosition,
+                        settingShape.StrokeColor,
+                        settingShape.Width,
+                        settingShape.FillColor
+                    );
+                }
+                catch
+                {
+                    // Если не получилось, пробуем конструктор по умолчанию
+                    try
+                    {
+                        var shape = (baseShape)Activator.CreateInstance(shapeType);
+
+                        // Устанавливаем свойства вручную
+                        shape.GetType().GetProperty("StartX")?.SetValue(shape, settingShape.startPosition.X);
+                        shape.GetType().GetProperty("StartY")?.SetValue(shape, settingShape.startPosition.Y);
+                        shape.GetType().GetProperty("EndX")?.SetValue(shape, settingShape.endPosition.X);
+                        shape.GetType().GetProperty("EndY")?.SetValue(shape, settingShape.endPosition.Y);
+
+                        var strokeProp = shape.GetType().GetProperty("ColorLine");
+                        strokeProp?.SetValue(shape, settingShape.StrokeColor);
+
+                        var widthProp = shape.GetType().GetProperty("WidthLine");
+                        widthProp?.SetValue(shape, settingShape.Width);
+
+                        var fillProp = shape.GetType().GetProperty("FillColor");
+                        fillProp?.SetValue(shape, settingShape.FillColor);
+
+                        return shape;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка создания фигуры {key}: {ex.Message}");
+                        return null;
+                    }
+                }
+            };
+
+            AddShape(key, key, Properties.Resources.Undefine, shapeFactory[key]);
         }
 
 
